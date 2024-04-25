@@ -1,3 +1,8 @@
 export default {
-  translation: {},
+  translation: {
+    headers: {
+      currencies: 'Курсы валют',
+      converter: 'Конвертер',
+    },
+  },
 };
