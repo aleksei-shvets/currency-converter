@@ -7,14 +7,14 @@ import {
   BrowserRouter, Route, Routes,
 } from 'react-router-dom';
 import ROUTES from './pages/route.js';
-import CurrencyList from './pages/CurrencyList.jsx';
+import Home from './pages/Home.jsx';
 import Converter from './pages/Converter.jsx';
 // import TabProvider from './providers/tabProvider.js';
 
 const App = () => (
   <BrowserRouter>
     <Routes>
-      <Route path={ROUTES.currencyList} element={<CurrencyList />} />
+      <Route path={ROUTES.currencyList} element={<Home />} />
       <Route path={ROUTES.converter} element={<Converter />} />
     </Routes>
   </BrowserRouter>
