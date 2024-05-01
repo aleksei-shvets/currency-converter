@@ -1,11 +1,13 @@
 // import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import TopNav from '../components/TopNav.jsx';
 // import Container from '../containers/mainContainer.jsx';
 // import { getRates } from '../store/ratesSlice.js';
 import CurrencyRateItem from '../components/CurrencyRateItem.jsx';
 import ratesSelectors from '../store/selectors.js';
+import { latestThank } from '../store/ratesSlice.js';
 
 /* const fakeData = {
   AED: 0.039311,
@@ -181,7 +183,17 @@ import ratesSelectors from '../store/selectors.js';
   ZWL: 3.446422,
 }; */
 
-const CurrencyList = () => {
+const Home = () => {
+  const base = useSelector(ratesSelectors.getBaseCurrency);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await dispatch(latestThank(base));
+    };
+    fetchData();
+  }, []);
+
   const { t } = useTranslation();
   const rates = useSelector(ratesSelectors.getRates);
   const baseCurrency = useSelector(ratesSelectors.getBaseCurrency);
@@ -196,4 +208,4 @@ const CurrencyList = () => {
   );
 };
 
-export default CurrencyList;
+export default Home;
