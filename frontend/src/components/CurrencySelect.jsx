@@ -3,7 +3,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import currencies from '../constatnts/currencies.js';
-import { latestThank } from '../store/ratesSlice.js';
+import { latestThank, updateBaseCurrency } from '../store/ratesSlice.js';
 import useBaseCurrency from '../contexts/hooks/useBaseCurrency.js';
 import { ratesSelectors } from '../store/selectors.js';
 
@@ -18,6 +18,7 @@ const CurrecySelect = () => {
     if (event.target.value !== currentBase) {
       currencyHook.updateBaseCurrency(event.target.value);
       setBaseCurrency(event.target.value);
+      dispatch(updateBaseCurrency(event.target.value));
       await dispatch(latestThank(event.target.value));
     }
   };
