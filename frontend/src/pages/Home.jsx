@@ -1,13 +1,11 @@
-// import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import TopNav from '../components/TopNav.jsx';
-// import Container from '../containers/mainContainer.jsx';
-// import { getRates } from '../store/ratesSlice.js';
+import Spinner from 'react-bootstrap/Spinner';
+// import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import CurrencyRateItem from '../components/CurrencyRateItem.jsx';
-import ratesSelectors from '../store/selectors.js';
-import { latestThank } from '../store/ratesSlice.js';
+import { ratesSelectors } from '../store/selectors.js';
+// import { latestThank } from '../store/ratesSlice.js';
+// import useBaseCurrency from '../contexts/hooks/useBaseCurrency.js';
 
 /* const fakeData = {
   AED: 0.039311,
@@ -184,27 +182,34 @@ import { latestThank } from '../store/ratesSlice.js';
 }; */
 
 const Home = () => {
-  const base = useSelector(ratesSelectors.getBaseCurrency);
-  const dispatch = useDispatch();
+  const loadingStatus = useSelector(ratesSelectors.getloadingStatus);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(latestThank(base));
-    };
-    fetchData();
-  }, []);
+  const rates = useSelector(ratesSelectors.getRates);
 
   const { t } = useTranslation();
-  const rates = useSelector(ratesSelectors.getRates);
   const baseCurrency = useSelector(ratesSelectors.getBaseCurrency);
-  const keys = Object.keys(rates);
-  return (
-    <>
-      <TopNav currentTab="currencyList" />
-      <div className="px-5">
-        {keys.map((key) => <CurrencyRateItem baseCurrency={baseCurrency} key={key} rate={rates[key]} currencyCode={key} fullName={t(`symbols.${key}`)} />)}
+  const keys = Object.keys(rates) ? Object.keys(rates) : {};
+  if (loadingStatus === 'loading') {
+    return (
+      <div
+        className="m-5 p-5 d-flex justify-content-center"
+      >
+        <div>
+          <Spinner
+            as="span"
+            animation="border"
+            role="status"
+            aria-hidden="true"
+          />
+          <span className="visually-hidden">Loading...</span>
+        </div>
       </div>
-    </>
+    );
+  }
+  return (
+    <div className="px-5">
+      {keys.length !== 0 ? keys.map((key) => <CurrencyRateItem baseCurrency={baseCurrency} key={key} rate={rates[key]} currencyCode={key} fullName={t(`symbols.${key}`)} />) : null}
+    </div>
   );
 };
 
