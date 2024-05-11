@@ -1,12 +1,20 @@
 import {
-  getLatestDate, getLatestTimestamp, getRates, getBaseCurrency,
-} from './ratesSlice.js';
-
-const ratesSelectors = {
   getLatestDate,
   getLatestTimestamp,
   getRates,
   getBaseCurrency,
+  getErr,
+  getloadingStatus,
+} from './ratesSlice.js';
+import { getModalStatus } from './modalSlice.js';
+
+export const ratesSelectors = {
+  getLatestDate,
+  getLatestTimestamp,
+  getRates,
+  getBaseCurrency,
+  getErr,
+  getloadingStatus,
 };
 
-export default ratesSelectors;
+export const modalSelectors = { getModalStatus };
