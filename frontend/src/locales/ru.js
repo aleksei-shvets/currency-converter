@@ -3,6 +3,7 @@ export default {
     headers: {
       currencies: 'Курсы валют',
       converter: 'Конвертер',
+      error: 'Ошибка...',
     },
     symbols: {
       AED: 'United Arab Emirates Dirham',
@@ -176,6 +177,11 @@ export default {
       ZMK: 'Zambian Kwacha (pre-2013)',
       ZMW: 'Zambian Kwacha',
       ZWL: 'Zimbabwean Dollar',
+    },
+    errMessages: {
+      429: 'Превышен лимит запросов на сервер',
+      400: 'Запрос с некорректными параметрами',
+      401: 'Недействительный API-ключ',
     },
   },
 };
