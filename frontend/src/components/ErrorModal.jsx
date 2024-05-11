@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { modalSelectors, ratesSelectors } from '../store/selectors.js';
 import { hidden } from '../store/modalSlice.js';
+import { resetErr } from '../store/ratesSlice.js';
 
 const ErrorModal = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const ErrorModal = () => {
 
   const handleHidden = () => {
     dispatch(hidden());
+    dispatch(resetErr(null));
   };
 
   console.log(modalStatus);
