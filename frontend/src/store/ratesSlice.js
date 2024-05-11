@@ -29,6 +29,9 @@ const ratesSlice = createSlice({
     resetErr: (state, action) => {
       state.error = action.payload;
     },
+    updateBaseCurrency: (state, action) => {
+      state.baseCurrency = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -52,7 +55,7 @@ const ratesSlice = createSlice({
         state.loadingStatus = 'failed';
       })
       .addCase(latestThank.fulfilled, (state, action) => {
-        state.rates = action.payload.rates;
+        state.rates = action.payload.data;
         state.latestTimestamp = action.payload.timestamp;
         state.latestDate = action.payload.date;
         state.baseCurrency = action.payload.base;
@@ -68,6 +71,6 @@ export const getBaseCurrency = (state) => state.currenciesRates.baseCurrency;
 export const getErr = (state) => state.currenciesRates.error;
 export const getloadingStatus = (state) => state.currenciesRates.loadingStatus;
 
-export const { resetErr } = ratesSlice.actions;
+export const { resetErr, updateBaseCurrency } = ratesSlice.actions;
 
 export default ratesSlice.reducer;
