@@ -11,7 +11,6 @@ export const latestThank = createAsyncThunk(
   async (baseCurrency) => {
     const response = await axios
       .get(getFetchUrl.latest(baseCurrency), { headers: header });
-    console.log(response.data.rates);
     return response.data;
   },
 );
@@ -26,11 +25,7 @@ const ratesSlice = createSlice({
     latestTimestamp: '',
     latestDate: '',
   },
-  reducers: {
-    updateBaseCurrency: (state, action) => {
-      state.baseCurrency = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(latestThank.pending, (state) => {
@@ -38,13 +33,25 @@ const ratesSlice = createSlice({
         state.error = null;
       })
       .addCase(latestThank.rejected, (state, action) => {
-        state.error = action.error;
+        if (action.error.message
+          && action.error.message === 'Request failed with status code 429') {
+          state.error = '429';
+        }
+        if (action.error.message
+          && action.error.message === 'Request failed with status code 400') {
+          state.error = '400';
+        }
+        if (action.error.message
+          && action.error.message === 'Request failed with status code 401') {
+          state.error = '401';
+        }
         state.loadingStatus = 'failed';
       })
       .addCase(latestThank.fulfilled, (state, action) => {
         state.rates = action.payload.rates;
         state.latestTimestamp = action.payload.timestamp;
         state.latestDate = action.payload.date;
+        state.baseCurrency = action.payload.base;
         state.error = null;
         state.loadingStatus = 'loaded';
       });
@@ -54,5 +61,7 @@ export const getLatestDate = (state) => state.currenciesRates.latestDate;
 export const getLatestTimestamp = (state) => state.currenciesRates.latestTimestamp;
 export const getRates = (state) => state.currenciesRates.rates;
 export const getBaseCurrency = (state) => state.currenciesRates.baseCurrency;
-export const { updateBaseCurrency } = ratesSlice.actions;
+export const getErr = (state) => state.currenciesRates.error;
+export const getloadingStatus = (state) => state.currenciesRates.loadingStatus;
+
 export default ratesSlice.reducer;
