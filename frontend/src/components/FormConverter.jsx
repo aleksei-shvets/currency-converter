@@ -3,7 +3,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useFormik } from 'formik';
 import Form from 'react-bootstrap/Form';
-// import InputGroup from 'react-bootstrap/InputGroup';
+import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
@@ -11,9 +11,9 @@ import { convertThunk } from '../store/ratesSlice.js';
 import { ratesSelectors } from '../store/selectors.js';
 import currencies from '../constatnts/currencies.js';
 import getCurrenciesArr from '../helpers/getCurrenciesArr.js';
-// import state from '../store/index.js';
 
 const FormConverter = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [convertedResult, setConvertedResult] = useState(null);
   const [convertCount, setConvertCount] = useState(null);
@@ -25,7 +25,11 @@ const FormConverter = () => {
 
   const getErrorsEl = (obj) => {
     const errors = Object.values(obj);
-    return errors.map((er) => <div key={er} className="small text-danger">{er}</div>);
+    return (
+      <div className="mb-3">
+        {errors.map((er) => <div key={er} className="small text-danger">{er}</div>)}
+      </div>
+    );
   };
 
   const formik = useFormik({
@@ -36,25 +40,23 @@ const FormConverter = () => {
       const errors = {};
       const regex = /^\d+\s[a-zA-Z]{3}\sin\s[a-zA-Z]{3}$/;
       const strArr = values.inputText.trim().split(' ');
+
       if (!regex.test(values.inputText) || strArr.length !== 4) {
-        errors.inputText = 'Запрос должен соответствовать примеру.';
+        errors.inputText = t('errorMessages.unknownCurrencies');
       }
 
       const currenciesArr = getCurrenciesArr(strArr);
-      if (!currenciesArr) {
-        errors.inputText = 'Неверный формат ввода.';
-        return errors;
-      }
+      if (currenciesArr) {
+        const unknownCurrencies = currenciesArr.map((item) => {
+          if (currencies.includes(item)) {
+            return null;
+          }
+          return item;
+        }).filter(Boolean);
 
-      const unknownCurrencies = currenciesArr.map((item) => {
-        if (currencies.includes(item)) {
-          return null;
+        if (unknownCurrencies.length > 0) {
+          errors.unknownCurrencies = `${t('errorMessages.unknownCurrencies')} ${unknownCurrencies.join(', ')}`;
         }
-        return item;
-      }).filter(Boolean);
-
-      if (unknownCurrencies.length > 0) {
-        errors.unknownCurrencies = unknownCurrencies.join(', ');
       }
 
       return errors;
@@ -122,15 +124,13 @@ const FormConverter = () => {
           onChange={formik.handleChange}
           value={formik.values.inputText}
           onBlur={formik.handleBlur}
-          placeholder="10 RUB in USD"
+          placeholder={t('placeholders.fetchText')}
           isInvalid={formik.errors.inputText || formik.errors.unknownCurrencies}
           className="mb-4"
         />
-        <Form.Label htmlFor="inputText" className="ms-2">10 RUB in USD</Form.Label>
-        <Form.Control.Feedback type="invalid">{formik.errors.inputText}</Form.Control.Feedback>
-        <Form.Control.Feedback type="invalid">{`Эти валюты не поддерживаются или указаны с ошибкой: ${formik.errors.unknownCurrencies}`}</Form.Control.Feedback>
-        {formik.errors ? getErrorsEl(formik.errors) : null}
-        <Button className="mb-3" type="submit" disabled={formik.isSubmitting}>Submit</Button>
+        <Form.Label htmlFor="inputText" className="ms-2">{t('placeholders.fetchText')}</Form.Label>
+        {getErrorsEl(formik.errors)}
+        <Button className="mb-3" type="submit" disabled={formik.isSubmitting}>{t('buttonNames.convert')}</Button>
         <div>
           {convertedResult !== null && ResultEl()}
         </div>
