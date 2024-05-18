@@ -7,11 +7,20 @@ import getHeader from '../fetchApi/getHeader.js';
 const header = getHeader();
 
 export const latestThank = createAsyncThunk(
-  'rates/latestThank',
+  'rates/latestThunk',
   async (baseCurrency) => {
     const response = await axios
       .get(getFetchUrl.latest(baseCurrency), { headers: header });
     return response.data;
+  },
+);
+
+export const convertThunk = createAsyncThunk(
+  'rates/convertThunk',
+  async ({ baseCurrency, toCurrency }) => {
+    const response = await axios
+      .get(getFetchUrl.convert(baseCurrency, toCurrency), { headers: header });
+    return response.data.data[toCurrency];
   },
 );
 
@@ -21,6 +30,7 @@ const ratesSlice = createSlice({
     loadingStatus: null,
     baseCurrency: defaultCurrency,
     rates: {},
+    convertingRate: null,
     error: null,
     latestTimestamp: '',
     latestDate: '',
@@ -61,6 +71,17 @@ const ratesSlice = createSlice({
         state.baseCurrency = action.payload.base;
         state.error = null;
         state.loadingStatus = 'loaded';
+      })
+      .addCase(convertThunk.fulfilled, (state, action) => {
+        state.convertingRate = action.payload;
+        state.error = null;
+        state.loadingStatus = 'loaded';
+      })
+      .addCase(convertThunk.pending, (state) => {
+        state.loadingStatus = 'loading';
+      })
+      .addCase(convertThunk.rejected, (state, action) => {
+        state.error = action.error; // TODO rework to network error
       });
   },
 });
@@ -70,6 +91,7 @@ export const getRates = (state) => state.currenciesRates.rates;
 export const getBaseCurrency = (state) => state.currenciesRates.baseCurrency;
 export const getErr = (state) => state.currenciesRates.error;
 export const getloadingStatus = (state) => state.currenciesRates.loadingStatus;
+export const getConvertRate = (state) => state.currenciesRates.convertingRate;
 
 export const { resetErr, updateBaseCurrency } = ratesSlice.actions;
 

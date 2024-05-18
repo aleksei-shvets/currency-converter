@@ -5,6 +5,7 @@ import {
   getBaseCurrency,
   getErr,
   getloadingStatus,
+  getConvertRate,
 } from './ratesSlice.js';
 import { getModalStatus } from './modalSlice.js';
 
@@ -15,6 +16,7 @@ export const ratesSelectors = {
   getBaseCurrency,
   getErr,
   getloadingStatus,
+  getConvertRate,
 };
 
 export const modalSelectors = { getModalStatus };
