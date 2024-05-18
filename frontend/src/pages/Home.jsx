@@ -33,7 +33,7 @@ const Home = () => {
     );
   }
   return (
-    <div className="px-5">
+    <div className="px-5 container rounded p-3 bg-light">
       {keys.length !== 0 ? keys.map((key) => <CurrencyRateItem baseCurrency={baseCurrency} key={key} rate={rates[key]} currencyCode={key} fullName={t(`symbols.${key}`)} />) : null}
     </div>
   );
