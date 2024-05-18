@@ -183,5 +183,15 @@ export default {
       400: 'Запрос с некорректными параметрами',
       401: 'Недействительный API-ключ',
     },
+    placeholders: {
+      fetchText: '10 RUB in USD',
+    },
+    errorMessages: {
+      unknownCurrencies: 'Эти валюты не поддерживаются или указаны с ошибкой:',
+      incorrectFetch: 'Запрос должен соответствовать примеру.',
+    },
+    buttonNames: {
+      convert: 'Конвертировать',
+    },
   },
 };
