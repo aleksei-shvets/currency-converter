@@ -1,5 +1,6 @@
 import { useFormik } from 'formik';
 import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
 import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,6 +21,8 @@ const FormConverter = () => {
     toCurrency: '',
   });
   const convertRate = useSelector(ratesSelectors.getConvertRate);
+
+  const loadingStatus = useSelector(ratesSelectors.getStatusConvertThunk);
 
   const getErrorsEl = (obj) => {
     const errors = Object.values(obj);
@@ -139,9 +142,12 @@ const FormConverter = () => {
         />
         <Form.Label htmlFor="inputText" className="ms-2 text-body-tertiary">{t('placeholders.fetchText')}</Form.Label>
         {getErrorsEl(formik.errors)}
-        <Button variant="info" className="mb-3" type="submit" disabled={formik.isSubmitting}>{t('buttonNames.convert')}</Button>
-        <div>
-          {convertedResult !== null && resultEl()}
+        <div className="d-flex align-items-center">
+          <Button variant="info" className="me-3" type="submit" disabled={formik.isSubmitting}>{t('buttonNames.convert')}</Button>
+          {loadingStatus === 'loading' ? <div className="align-self-center me-3"><Spinner size="sm" /></div> : null}
+          <div>
+            {convertedResult !== null && resultEl()}
+          </div>
         </div>
       </Form.Floating>
     </Form>

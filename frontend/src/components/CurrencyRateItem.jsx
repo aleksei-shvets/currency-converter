@@ -10,7 +10,7 @@ const CurrencyRateItem = ({
       <div className="me-2">{calculate(rate)}</div>
       <div className="me-2">{currencyCode}</div>
     </div>
-    <div className="small d-flex flex-row align-items-center">
+    <div className="small d-flex flex-wrap flex-row align-items-center">
       <div className="me-2">
         <strong>
           {`${currencyCode}`}

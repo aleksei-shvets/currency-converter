@@ -28,6 +28,7 @@ const ratesSlice = createSlice({
   name: 'currenciesRates',
   initialState: {
     loadingStatus: null,
+    convertLoadingStatus: null,
     baseCurrency: defaultCurrency,
     rates: {},
     convertingRate: null,
@@ -75,10 +76,10 @@ const ratesSlice = createSlice({
       .addCase(convertThunk.fulfilled, (state, action) => {
         state.convertingRate = action.payload;
         state.error = null;
-        state.loadingStatus = 'loaded';
+        state.convertLoadingStatus = 'loaded';
       })
       .addCase(convertThunk.pending, (state) => {
-        state.loadingStatus = 'loading';
+        state.convertLoadingStatus = 'loading';
       })
       .addCase(convertThunk.rejected, (state, action) => {
         state.error = action.error; // TODO rework to network error
@@ -90,8 +91,9 @@ export const getLatestTimestamp = (state) => state.currenciesRates.latestTimesta
 export const getRates = (state) => state.currenciesRates.rates;
 export const getBaseCurrency = (state) => state.currenciesRates.baseCurrency;
 export const getErr = (state) => state.currenciesRates.error;
-export const getloadingStatus = (state) => state.currenciesRates.loadingStatus;
+export const getStatusLatestThunk = (state) => state.currenciesRates.loadingStatus;
 export const getConvertRate = (state) => state.currenciesRates.convertingRate;
+export const getStatusConvertThunk = (state) => state.currenciesRates.convertLoadingStatus;
 
 export const { resetErr, updateBaseCurrency } = ratesSlice.actions;
 

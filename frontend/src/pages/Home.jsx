@@ -7,7 +7,7 @@ import baseCurrencyHook from '../contexts/hooks/useBaseCurrency.js';
 
 const Home = () => {
   const useBaseCurrency = baseCurrencyHook();
-  const loadingStatus = useSelector(ratesSelectors.getloadingStatus);
+  const loadingStatus = useSelector(ratesSelectors.getStatusLatestThunk);
 
   const rates = useSelector(ratesSelectors.getRates);
 

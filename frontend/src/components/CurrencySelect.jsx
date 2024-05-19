@@ -12,7 +12,7 @@ const CurrecySelect = () => {
   const currentBase = currencyHook.base;
   const dispatch = useDispatch();
   const [baseCurrency, setBaseCurrency] = useState(currentBase);
-  const loadingStatus = useSelector(ratesSelectors.getloadingStatus);
+  const loadingStatus = useSelector(ratesSelectors.getStatusLatestThunk);
 
   const selectHandle = async (event) => {
     if (event.target.value !== currentBase) {

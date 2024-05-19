@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
@@ -16,6 +17,8 @@ const Converter = () => {
   const [convertCount, setConvertCount] = useState(null);
 
   const convertRate = useSelector(ratesSelectors.getConvertRate);
+
+  const loadingStatus = useSelector(ratesSelectors.getStatusConvertThunk);
 
   const numShema = getShema(t);
 
@@ -133,7 +136,8 @@ const Converter = () => {
         </div>
 
         <div className="d-flex align-items-center">
-          <Button variant="info" className="mb-3" type="submit" disabled={formik.isSubmitting}>{t('buttonNames.convert')}</Button>
+          <Button variant="info" className="me-3" type="submit" disabled={formik.isSubmitting}>{t('buttonNames.convert')}</Button>
+          {loadingStatus === 'loading' ? <div className="align-self-center"><Spinner size="sm" /></div> : null}
         </div>
       </Form>
     </div>
