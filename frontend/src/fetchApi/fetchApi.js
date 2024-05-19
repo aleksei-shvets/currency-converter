@@ -16,8 +16,6 @@ const getUrlConvert = (baseCurrency, toCurrency) => {
   return url.href;
 };
 
-// https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_a1nKOeuDHWsJZKuaIYAdmoFrGvbVF9R6ccBN1Am3&currencies=EUR&base_currency=BGN
-
 const getFetchUrl = {
   latest: (baseCurrency) => getUrlOfBaseCurrency(baseCurrency),
   convert: (baseCurrency, toCurrency) => getUrlConvert(baseCurrency, toCurrency),

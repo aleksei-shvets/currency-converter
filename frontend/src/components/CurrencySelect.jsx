@@ -33,12 +33,11 @@ const CurrecySelect = () => {
         aria-hidden="true"
         className="me-2"
       />
-      <span className="visually-hidden">Loading...</span>
     </div>
   );
 
   return (
-    <div className="d-flex justify-content-center align-items-center">
+    <div className="d-flex justify-content-end align-items-center">
       {loadingStatus === 'loading' ? renderSpinner() : null}
       <Form.Select
         value={baseCurrency}

@@ -184,7 +184,7 @@ export default {
       401: 'Недействительный API-ключ',
     },
     placeholders: {
-      fetchText: '10 RUB in USD',
+      fetchText: 'Пример: 10 RUB in USD',
     },
     errorMessages: {
       unknownCurrencies: 'Эти валюты не поддерживаются или указаны с ошибкой:',

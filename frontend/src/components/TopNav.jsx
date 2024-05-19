@@ -59,9 +59,10 @@ const TopNav = () => {
     <>
       <Nav
         variant="underline"
-        className="bg-light p-4 d-flex flex-row align-items-center sticky-top mb-3"
+        className="bg-light p-4 d-flex flex-row justify-content-between align-items-center sticky-top mb-3"
+        style={{ boxShadow: '0px 12px 9px -6px rgba(34, 60, 80, 0.43)' }}
       >
-        <div className="d-flex flex-row align-items-center flex-grow-1">
+        <div className="d-flex flex-row align-items-center">
           <Nav.Item className="me-3">
             <Nav.Link
               className={`text-secondary ${activPage === '/' ? 'active' : ''}`}

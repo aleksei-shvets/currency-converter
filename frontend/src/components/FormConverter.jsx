@@ -1,6 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable consistent-return */
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { useFormik } from 'formik';
 import Form from 'react-bootstrap/Form';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +12,7 @@ import getCurrenciesArr from '../helpers/getCurrenciesArr.js';
 const FormConverter = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [activeForm, setActiveForm] = useState(false); // State to track active form focus
   const [convertedResult, setConvertedResult] = useState(null);
   const [convertCount, setConvertCount] = useState(null);
   const [fetchCurrencies, setFetchCurrencies] = useState({
@@ -37,29 +35,32 @@ const FormConverter = () => {
       inputText: '',
     },
     validate: (values) => {
-      const errors = {};
-      const regex = /^\d+\s[a-zA-Z]{3}\sin\s[a-zA-Z]{3}$/;
-      const strArr = values.inputText.trim().split(' ');
+      if (activeForm) { // Validate only if this form is active
+        const errors = {};
+        const regex = /^\d+\s[a-zA-Z]{3}\sin\s[a-zA-Z]{3}$/;
+        const strArr = values.inputText.trim().split(' ');
 
-      if (!regex.test(values.inputText) || strArr.length !== 4) {
-        errors.inputText = t('errorMessages.unknownCurrencies');
-      }
-
-      const currenciesArr = getCurrenciesArr(strArr);
-      if (currenciesArr) {
-        const unknownCurrencies = currenciesArr.map((item) => {
-          if (currencies.includes(item)) {
-            return null;
-          }
-          return item;
-        }).filter(Boolean);
-
-        if (unknownCurrencies.length > 0) {
-          errors.unknownCurrencies = `${t('errorMessages.unknownCurrencies')} ${unknownCurrencies.join(', ')}`;
+        if (!regex.test(values.inputText) || strArr.length !== 4) {
+          errors.inputText = t('errorMessages.incorrectFetch');
+          return errors;
         }
-      }
 
-      return errors;
+        const currenciesArr = getCurrenciesArr(strArr);
+        if (currenciesArr.length > 0) {
+          const unknownCurrencies = currenciesArr.map((item) => {
+            if (currencies.includes(item)) {
+              return null;
+            }
+            return item;
+          }).filter(Boolean);
+
+          if (unknownCurrencies.length > 0) {
+            errors.unknownCurrencies = `${t('errorMessages.unknownCurrencies')} ${unknownCurrencies.join(', ')}`;
+          }
+        }
+
+        return errors;
+      }
     },
     onSubmit: async (values) => {
       try {
@@ -76,6 +77,7 @@ const FormConverter = () => {
           baseCurrency: fromCurrency.toUpperCase(),
           toCurrency: toCurrency.toUpperCase(),
         }));
+        formik.resetForm();
       } catch (e) {
         return e;
       } finally {
@@ -84,7 +86,7 @@ const FormConverter = () => {
     },
   });
 
-  const ResultEl = () => {
+  const resultEl = () => {
     if (convertedResult) {
       return (
         <div>
@@ -114,7 +116,12 @@ const FormConverter = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="container">
+    <Form
+      onSubmit={handleSubmit}
+      className="container"
+      onFocus={() => setActiveForm(true)}
+      onBlur={() => setActiveForm(false)}
+    >
       <Form.Floating>
         <Form.Control
           autoComplete="inputText"
@@ -125,14 +132,16 @@ const FormConverter = () => {
           value={formik.values.inputText}
           onBlur={formik.handleBlur}
           placeholder={t('placeholders.fetchText')}
-          isInvalid={formik.errors.inputText || formik.errors.unknownCurrencies}
+          isInvalid={!!(formik.errors.inputText
+            || formik.errors.unknownCurrencies)
+            && formik.touched.inputText}
           className="mb-4"
         />
-        <Form.Label htmlFor="inputText" className="ms-2">{t('placeholders.fetchText')}</Form.Label>
+        <Form.Label htmlFor="inputText" className="ms-2 text-body-tertiary">{t('placeholders.fetchText')}</Form.Label>
         {getErrorsEl(formik.errors)}
-        <Button className="mb-3" type="submit" disabled={formik.isSubmitting}>{t('buttonNames.convert')}</Button>
+        <Button variant="info" className="mb-3" type="submit" disabled={formik.isSubmitting}>{t('buttonNames.convert')}</Button>
         <div>
-          {convertedResult !== null && ResultEl()}
+          {convertedResult !== null && resultEl()}
         </div>
       </Form.Floating>
     </Form>
