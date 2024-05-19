@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { ratesSelectors } from '../store/selectors.js';
 import currencies from '../constatnts/currencies.js';
 import { convertThunk } from '../store/ratesSlice.js';
+import getShema from '../validation/validation.js';
 
 const Converter = () => {
   const { t } = useTranslation();
@@ -15,6 +16,8 @@ const Converter = () => {
   const [convertCount, setConvertCount] = useState(null);
 
   const convertRate = useSelector(ratesSelectors.getConvertRate);
+
+  const numShema = getShema(t);
 
   useEffect(() => {
     if (convertRate) {
@@ -29,6 +32,7 @@ const Converter = () => {
       toCurrency: '',
       count: '',
     },
+    validationSchema: numShema,
     onSubmit: async (values) => {
       try {
         const { count, fromCurrency, toCurrency } = values;
@@ -71,8 +75,11 @@ const Converter = () => {
                   placeholder=""
                   onChange={formik.handleChange}
                   size="md"
+                  isInvalid={formik.touched.count && !!formik.errors.count}
                 />
+                <Form.Control.Feedback type="invalid">{formik.errors.count}</Form.Control.Feedback>
               </div>
+
               <div className="" style={{ minWidth: '100px' }}>
                 <Form.Select
                   name="fromCurrency"

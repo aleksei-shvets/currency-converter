@@ -189,6 +189,7 @@ export default {
     errorMessages: {
       unknownCurrencies: 'Эти валюты не поддерживаются или указаны с ошибкой:',
       incorrectFetch: 'Запрос должен соответствовать примеру.',
+      positiveNum: 'Только положительные числа',
     },
     buttonNames: {
       convert: 'Конвертировать',
